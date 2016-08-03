@@ -9,8 +9,31 @@
     tools:context="hodov.greenhouse.SensorsActivity$PlaceholderFragment">
 
     <TextView
-        android:id="@+id/section_label"
+        android:id="@+id/section_label_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/section_label_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/section_label_temperature"
+        />
+
+    <TextView
+        android:id="@+id/section_label_soil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/section_label_humidity"
+        />
+
+    <TextView
+        android:id="@+id/section_label_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/section_label_soil"
+        />
+
+
 
 </RelativeLayout>

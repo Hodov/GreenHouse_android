@@ -34,8 +34,8 @@ import java.util.Iterator;
 
 public class SensorsActivity extends AppCompatActivity {
 
-    public JSONObject storage;
-    ArrayList<String> keys = new ArrayList<String>();
+    public static JSONObject storage;
+    static ArrayList<String> keys = new ArrayList<String>();
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -139,8 +139,21 @@ public class SensorsActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            TextView textViewAirTemperature = (TextView) rootView.findViewById(R.id.section_label_temperature);
+            TextView textViewAirHumidity = (TextView) rootView.findViewById(R.id.section_label_humidity);
+            TextView textViewSoilHumidity = (TextView) rootView.findViewById(R.id.section_label_soil);
+            TextView textViewLight = (TextView) rootView.findViewById(R.id.section_label_light);
+            //TODO: Insert data from storage
+
+            String airTemperature = getAirTemperature(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+            String airHumidity = getAirHumidity(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+            String soilHumidity = getSoilHumidity(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+            String light = getLight(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+
+            textViewAirTemperature.setText("Temperature " + airTemperature);
+            textViewAirHumidity.setText("Humidity " + airHumidity);
+            textViewSoilHumidity.setText("Soil " + soilHumidity);
+            textViewLight.setText("Light " + light);
             return rootView;
         }
     }
@@ -169,7 +182,6 @@ public class SensorsActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            System.out.println("Выводим пейдж тайтл");
             return keys.get(position);
         }
     }
@@ -193,14 +205,47 @@ public class SensorsActivity extends AppCompatActivity {
     }
 
     private void createKeys() {
-        System.out.println("Считаем кейс");
         Iterator<String> iter = storage.keys();
         while (iter.hasNext()) {
             String key = iter.next();
-            System.out.println(key);
             keys.add(key);
         }
-        System.out.println(keys);
+    }
+
+    private static String getAirTemperature(int position) {
+        try {
+            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("airTemperature").getInt("value"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "N/A";
+        }
+    }
+
+    private static String getAirHumidity(int position) {
+        try {
+            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("airHumidity").getInt("value"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "N/A";
+        }
+    }
+
+    private static String getSoilHumidity(int position) {
+        try {
+            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("soilHumidity").getInt("value"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "N/A";
+        }
+    }
+
+    private static String getLight(int position) {
+        try {
+            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("light").getInt("value"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "N/A";
+        }
     }
 
 }
