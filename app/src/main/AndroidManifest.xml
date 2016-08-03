@@ -20,8 +20,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
+            android:name=".SensorsActivity"
+            android:label="@string/title_activity_sensors"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
