@@ -1,7 +1,5 @@
 package hodov.greenhouse;
 
-
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
