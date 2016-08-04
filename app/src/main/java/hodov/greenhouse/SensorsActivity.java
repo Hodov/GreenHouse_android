@@ -1,8 +1,11 @@
 package hodov.greenhouse;
 
+import android.content.DialogInterface;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -143,6 +146,7 @@ public class SensorsActivity extends AppCompatActivity {
             TextView textViewAirHumidity = (TextView) rootView.findViewById(R.id.section_label_humidity);
             TextView textViewSoilHumidity = (TextView) rootView.findViewById(R.id.section_label_soil);
             TextView textViewLight = (TextView) rootView.findViewById(R.id.section_label_light);
+
             //TODO: Insert data from storage
 
             String airTemperature = getAirTemperature(getArguments().getInt(ARG_SECTION_NUMBER)-1);
@@ -150,10 +154,26 @@ public class SensorsActivity extends AppCompatActivity {
             String soilHumidity = getSoilHumidity(getArguments().getInt(ARG_SECTION_NUMBER)-1);
             String light = getLight(getArguments().getInt(ARG_SECTION_NUMBER)-1);
 
-            textViewAirTemperature.setText("Temperature " + airTemperature);
-            textViewAirHumidity.setText("Humidity " + airHumidity);
-            textViewSoilHumidity.setText("Soil " + soilHumidity);
-            textViewLight.setText("Light " + light);
+            textViewAirTemperature.setText(airTemperature);
+            textViewAirHumidity.setText(airHumidity);
+            textViewSoilHumidity.setText(soilHumidity);
+            textViewLight.setText(light);
+
+
+            TextView heaterRelay = (TextView) rootView.findViewById(R.id.heater_relay);
+            TextView coolerRelay = (TextView) rootView.findViewById(R.id.cooler_relay);
+            TextView humidifierRelay = (TextView) rootView.findViewById(R.id.humidifier_relay);
+            TextView illuminatorRelay = (TextView) rootView.findViewById(R.id.illuminator_relay);
+
+            heaterRelay.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1), "heater");
+                    action.show(getFragmentManager(), "actions");
+                    return false;
+                }
+            });
+
             return rootView;
         }
     }
@@ -214,7 +234,7 @@ public class SensorsActivity extends AppCompatActivity {
 
     private static String getAirTemperature(int position) {
         try {
-            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("airTemperature").getInt("value"));
+            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("airTemperature").getInt("value"))+"\u2103";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
@@ -223,7 +243,7 @@ public class SensorsActivity extends AppCompatActivity {
 
     private static String getAirHumidity(int position) {
         try {
-            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("airHumidity").getInt("value"));
+            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("airHumidity").getInt("value"))+"\u0025";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
@@ -241,12 +261,13 @@ public class SensorsActivity extends AppCompatActivity {
 
     private static String getLight(int position) {
         try {
-            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("light").getInt("value"));
+            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("light").getInt("value"))+"lx";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
         }
     }
+
 
 }
 

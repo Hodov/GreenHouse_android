@@ -8,31 +8,142 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="hodov.greenhouse.SensorsActivity$PlaceholderFragment">
 
-    <TextView
-        android:id="@+id/section_label_temperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/from_header_margin"
+        android:id="@+id/linearLayout">
 
-    <TextView
-        android:id="@+id/section_label_humidity"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/section_label_temperature"
-        />
+        android:layout_marginRight="@dimen/from_header_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/air_header"
+            android:id="@+id/section_label_air_header"
+            android:textSize="@dimen/text_size_header"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/section_label_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size"
+            android:layout_alignLeft="@id/section_label_air_header"
+            android:layout_below="@+id/section_label_air_header"
+            android:layout_marginTop="@dimen/from_header_margin"/>
+
+        <TextView
+            android:id="@+id/section_label_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size"
+            android:layout_alignRight="@id/section_label_air_header"
+            android:layout_below="@+id/section_label_air_header"
+            android:layout_marginTop="@dimen/from_header_margin"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/light_header"
+            android:id="@+id/section_label_light_header"
+            android:textSize="@dimen/text_size_header"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/section_label_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size"
+            android:layout_below="@id/section_label_light_header"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/from_header_margin"/>
+
+    </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/from_border_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/soil_header"
+                android:id="@+id/section_label_soil_header"
+                android:textSize="@dimen/text_size_header"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:id="@+id/section_label_soil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size"
+                android:layout_below="@id/section_label_soil_header"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/from_header_margin"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/section_label_soil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/section_label_humidity"
-        />
+        android:text="Heater"
+        android:id="@+id/heater_relay"
+        android:textSize="@dimen/text_size_header"
+        android:layout_below="@+id/linearLayout"
+        android:layout_marginTop="@dimen/text_size_header"/>
 
     <TextView
-        android:id="@+id/section_label_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/section_label_soil"
-        />
+        android:text="Cooler"
+        android:id="@+id/cooler_relay"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="@dimen/text_size_header"
+        android:layout_below="@id/heater_relay"
+        android:layout_marginTop="@dimen/text_size_header"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Illuminator"
+        android:id="@+id/illuminator_relay"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="@dimen/text_size_header"
+        android:layout_below="@id/cooler_relay"
+        android:layout_marginTop="@dimen/text_size_header"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Humidifier"
+        android:id="@+id/humidifier_relay"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="@dimen/text_size_header"
+        android:layout_below="@id/illuminator_relay"
+        android:layout_marginTop="@dimen/text_size_header"/>
 
 
 

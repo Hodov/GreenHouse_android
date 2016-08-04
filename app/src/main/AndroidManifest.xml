@@ -23,6 +23,7 @@
             android:name=".SensorsActivity"
             android:label="@string/title_activity_sensors"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>
