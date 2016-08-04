@@ -173,6 +173,30 @@ public class SensorsActivity extends AppCompatActivity {
                     return false;
                 }
             });
+            coolerRelay.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1), "cooler");
+                    action.show(getFragmentManager(), "actions");
+                    return false;
+                }
+            });
+            humidifierRelay.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1), "humidifier");
+                    action.show(getFragmentManager(), "actions");
+                    return false;
+                }
+            });
+            illuminatorRelay.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1), "illuminator");
+                    action.show(getFragmentManager(), "actions");
+                    return false;
+                }
+            });
 
             return rootView;
         }

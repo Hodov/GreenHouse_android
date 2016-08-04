@@ -40,23 +40,30 @@ public class RelayAction extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
-                        jsonPostRequest(controller,relay,which);
+                        String action;
 
+                        switch (which) {
+                            case 0: action = "auto"; break;
+                            case 1: action = "on"; break;
+                            case 2: action = "off"; break;
+                            default: action = ""; break;
+                        }
+
+                        jsonPostRequest(controller,relay,action);
                     }
                 });
         // Create the AlertDialog object and return it
         return builder.create();
     }
 
-    private void jsonPostRequest(String controller, String relay, int pos) {
-
+    private void jsonPostRequest(String controller, String relay, String action) {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         String url = getActivity().getResources().getString(R.string.url_raspberry_android);
         JSONObject obj = new JSONObject();
         try {
             obj.put("controller", controller);
             obj.put("relay", relay);
-            obj.put("position", pos);
+            obj.put("position", action);
         } catch (JSONException e) {
             e.printStackTrace();
         }
