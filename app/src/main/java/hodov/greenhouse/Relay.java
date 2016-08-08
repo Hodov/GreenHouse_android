@@ -6,13 +6,17 @@ package hodov.greenhouse;
 public class Relay {
     public String name;
     public String mode;
-    public int switchPosition;
-    public int sensorValue;
+    public int switcher;
+    public String value;
+    public int lowerBoundThreshold;
+    public int upperBoundThreshold;
 
-    public Relay(String name, String mode, int switchPosition, int sensorValue) {
+    public Relay(String name, String mode, int switcher, String value,int lowerBoundThreshold, int upperBoundThreshold) {
         this.name = name;
         this.mode = mode;
-        this.switchPosition = switchPosition;
-        this.sensorValue = sensorValue;
+        this.switcher = switcher;
+        this.value = value;
+        this.lowerBoundThreshold = lowerBoundThreshold;
+        this.upperBoundThreshold = upperBoundThreshold;
     }
 }

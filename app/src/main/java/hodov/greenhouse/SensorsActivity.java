@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -38,7 +39,8 @@ import java.util.Iterator;
 public class SensorsActivity extends AppCompatActivity {
 
     public static JSONObject storage;
-    static ArrayList<String> keys = new ArrayList<String>();
+    static ArrayList<SensorController> keys = new ArrayList<SensorController>();
+
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -142,6 +144,13 @@ public class SensorsActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
+
+            CustomListAdapter adapter = new CustomListAdapter(getActivity(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
+            GridView gridViewItems = (GridView) getView().findViewById(R.id.list_item);
+            gridViewItems.setAdapter(adapter);
+
+
+
             TextView textViewAirTemperature = (TextView) rootView.findViewById(R.id.section_label_temperature);
             TextView textViewAirHumidity = (TextView) rootView.findViewById(R.id.section_label_humidity);
             TextView textViewSoilHumidity = (TextView) rootView.findViewById(R.id.section_label_soil);
@@ -149,10 +158,10 @@ public class SensorsActivity extends AppCompatActivity {
 
             //TODO: Insert data from storage
 
-            String airTemperature = getAirTemperature(getArguments().getInt(ARG_SECTION_NUMBER)-1);
-            String airHumidity = getAirHumidity(getArguments().getInt(ARG_SECTION_NUMBER)-1);
-            String soilHumidity = getSoilHumidity(getArguments().getInt(ARG_SECTION_NUMBER)-1);
-            String light = getLight(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+            String airTemperature = getAirTemperature(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
+            String airHumidity = getAirHumidity(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
+            String soilHumidity = getSoilHumidity(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
+            String light = getLight(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
 
             textViewAirTemperature.setText(airTemperature);
             textViewAirHumidity.setText(airHumidity);
@@ -168,7 +177,7 @@ public class SensorsActivity extends AppCompatActivity {
             heaterRelay.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1), "heater");
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, "heater");
                     action.show(getFragmentManager(), "actions");
                     return false;
                 }
@@ -176,7 +185,7 @@ public class SensorsActivity extends AppCompatActivity {
             coolerRelay.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1), "cooler");
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, "cooler");
                     action.show(getFragmentManager(), "actions");
                     return false;
                 }
@@ -184,7 +193,7 @@ public class SensorsActivity extends AppCompatActivity {
             humidifierRelay.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1), "humidifier");
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, "humidifier");
                     action.show(getFragmentManager(), "actions");
                     return false;
                 }
@@ -192,7 +201,7 @@ public class SensorsActivity extends AppCompatActivity {
             illuminatorRelay.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1), "illuminator");
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, "illuminator");
                     action.show(getFragmentManager(), "actions");
                     return false;
                 }
@@ -226,7 +235,7 @@ public class SensorsActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return keys.get(position);
+            return keys.get(position).name;
         }
     }
 
@@ -252,40 +261,79 @@ public class SensorsActivity extends AppCompatActivity {
         Iterator<String> iter = storage.keys();
         while (iter.hasNext()) {
             String key = iter.next();
-            keys.add(key);
+
+            SensorController tempController = new SensorController(key);
+            Iterator<String> iterInSensor = null;
+
+            try {
+                iterInSensor = storage.getJSONObject(key).getJSONObject("relays").keys();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            while (iterInSensor.hasNext()) {
+                String relay = iterInSensor.next();
+                tempController.relays.add(SensorController(key, relay));
+            }
+            keys.add(tempController);
         }
     }
 
-    private static String getAirTemperature(int position) {
+    private Relay SensorController (String controller, String relay) {
+        String name = relay;
+        String mode = "";
+        int switcher = 0;
+        int lowerBoundThreshold = 0;
+        int upperBoundThreshold = 0;
+        String value = "";
         try {
-            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("airTemperature").getInt("value"))+"\u2103";
+            mode = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getString("mode");
+            switcher = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("switcher");
+            lowerBoundThreshold = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("lowerBoundThreshold");
+            upperBoundThreshold = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("upperBoundThreshold");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        switch (relay) {
+            case "heater" :  value = getAirTemperature(controller); break;
+            case "cooler" :  value = getAirTemperature(controller); break;
+            case "humidifier" :  value = getAirHumidity(controller); break;
+            case "illuminator" :  value = getLight(controller); break;
+        }
+        Relay tempRelay = new Relay(name, mode, switcher, value, lowerBoundThreshold, upperBoundThreshold);
+        return tempRelay;
+    }
+
+    private static String getAirTemperature(String controller) {
+        try {
+            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("airTemperature").getInt("value"))+"\u2103";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
         }
     }
 
-    private static String getAirHumidity(int position) {
+    private static String getAirHumidity(String controller) {
         try {
-            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("airHumidity").getInt("value"))+"\u0025";
+            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("airHumidity").getInt("value"))+"\u0025";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
         }
     }
 
-    private static String getSoilHumidity(int position) {
+    private static String getSoilHumidity(String controller) {
         try {
-            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("soilHumidity").getInt("value"));
+            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("soilHumidity").getInt("value"));
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
         }
     }
 
-    private static String getLight(int position) {
+    private static String getLight(String controller) {
         try {
-            return String.valueOf(storage.getJSONObject(keys.get(position)).getJSONObject("sensors").getJSONObject("light").getInt("value"))+"lx";
+            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("light").getInt("value"))+"lx";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
