@@ -8,6 +8,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="hodov.greenhouse.SensorsActivity$PlaceholderFragment">
 
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="2"
+        android:id="@+id/grid_view">
+    </GridView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -63,9 +63,9 @@ public class SensorsActivity extends AppCompatActivity {
 
         try {
             storage = new JSONObject(getIntent().getStringExtra("storage"));
-            createKeys();
+            keys = createKeys(storage);
         } catch (JSONException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -91,7 +91,6 @@ public class SensorsActivity extends AppCompatActivity {
         });
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,13 +142,8 @@ public class SensorsActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
             View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
-
-            CustomListAdapter adapter = new CustomListAdapter(getActivity(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
-            GridView gridViewItems = (GridView) getView().findViewById(R.id.list_item);
-            gridViewItems.setAdapter(adapter);
-
-
 
             TextView textViewAirTemperature = (TextView) rootView.findViewById(R.id.section_label_temperature);
             TextView textViewAirHumidity = (TextView) rootView.findViewById(R.id.section_label_humidity);
@@ -207,6 +201,10 @@ public class SensorsActivity extends AppCompatActivity {
                 }
             });
 
+            CustomListAdapter adapter = new CustomListAdapter(rootView.getContext(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
+            GridView gridViewItems = (GridView) rootView.findViewById(R.id.grid_view);
+            gridViewItems.setAdapter(adapter);
+
             return rootView;
         }
     }
@@ -257,7 +255,8 @@ public class SensorsActivity extends AppCompatActivity {
         queue.add(jsonRequest);
     }
 
-    private void createKeys() {
+    private ArrayList<SensorController> createKeys(JSONObject storage) {
+        ArrayList<SensorController> keys = new ArrayList<SensorController>();
         Iterator<String> iter = storage.keys();
         while (iter.hasNext()) {
             String key = iter.next();
@@ -273,13 +272,14 @@ public class SensorsActivity extends AppCompatActivity {
 
             while (iterInSensor.hasNext()) {
                 String relay = iterInSensor.next();
-                tempController.relays.add(SensorController(key, relay));
+                tempController.relays.add(GetSensorController(key, relay, storage));
             }
             keys.add(tempController);
         }
+        return keys;
     }
 
-    private Relay SensorController (String controller, String relay) {
+    private Relay GetSensorController (String controller, String relay, JSONObject storage) {
         String name = relay;
         String mode = "";
         int switcher = 0;
@@ -288,7 +288,11 @@ public class SensorsActivity extends AppCompatActivity {
         String value = "";
         try {
             mode = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getString("mode");
-            switcher = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("switcher");
+            if (storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).get("switcher") != null) {
+                switcher = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("switcher");
+            } else {
+                switcher = 0;
+            }
             lowerBoundThreshold = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("lowerBoundThreshold");
             upperBoundThreshold = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("upperBoundThreshold");
         } catch (JSONException e) {
