@@ -290,7 +290,7 @@ public class SensorsActivity extends AppCompatActivity {
 
     private static String getAirTemperature(String controller) {
         try {
-            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("airTemperature").getInt("value"))+"\u2103";
+            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("airTemperature").getInt("value"))+" \u2103";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
@@ -299,7 +299,7 @@ public class SensorsActivity extends AppCompatActivity {
 
     private static String getAirHumidity(String controller) {
         try {
-            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("airHumidity").getInt("value"))+"\u0025";
+            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("airHumidity").getInt("value"))+" \u0025";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";
@@ -317,7 +317,7 @@ public class SensorsActivity extends AppCompatActivity {
 
     private static String getLight(String controller) {
         try {
-            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("light").getInt("value"))+"lx";
+            return String.valueOf(storage.getJSONObject(controller).getJSONObject("sensors").getJSONObject("light").getInt("value"))+" lx";
         } catch (JSONException e) {
             e.printStackTrace();
             return "N/A";

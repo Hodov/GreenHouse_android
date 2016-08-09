@@ -1,6 +1,7 @@
 package hodov.greenhouse;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,16 +49,14 @@ public class CustomListAdapter extends BaseAdapter {
                         inflate(R.layout.list_item, parent, false);
             }
 
-
-
             // get current item to be displayed
             Relay currentItem = (Relay) getItem(position);
 
-            if (currentItem.switcher == 0) {
-                convertView.setBackgroundColor(0xFFE57373);
-            } else {
-                convertView.setBackgroundColor(0xFF81C784);
-            }
+//            if (currentItem.switcher == 0) {
+//                convertView.setBackgroundColor(0xFFE57373);
+//            } else {
+//                convertView.setBackgroundColor(0xFF81C784);
+//            }
             // get the TextView for item name and item description
             TextView textViewItemName = (TextView)
                     convertView.findViewById(R.id.text_view_item_name);
@@ -73,6 +72,17 @@ public class CustomListAdapter extends BaseAdapter {
             textViewItemValue.setText(currentItem.value);
             textViewItemLower.setText(String.valueOf(currentItem.lowerBoundThreshold));
             textViewItemHigh.setText(String.valueOf(currentItem.upperBoundThreshold));
+
+
+
+            switch (currentItem.name) {
+                case "cooler" : convertView.setBackgroundColor(Color.parseColor("#4DD0E1")); break;
+                case "heater" : convertView.setBackgroundColor(Color.parseColor("#FFB74D")); break;
+                case "humidifier" : convertView.setBackgroundColor(Color.parseColor("#81C784")); break;
+                case "illuminator" : convertView.setBackgroundColor(Color.parseColor("#e57373")); break;
+                case "sprinkler" : convertView.setBackgroundColor(Color.parseColor("#90CAF9")); break;
+            }
+
             // returns the view for the current row
             return convertView;
         }

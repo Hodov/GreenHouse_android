@@ -6,39 +6,42 @@
         android:id="@+id/text_view_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textSize="@dimen/text_size_header"
-
-        android:text="N/A"/>
+        android:layout_marginLeft="@dimen/from_edge_margin"
+        android:textSize="@dimen/primary_text_size"
+        android:textColor="@color/colorPrimaryText"
+        android:text="@string/sensor_pattern"
+        android:layout_marginTop="@dimen/from_top_edge_margin"/>
 
     <TextView
         android:id="@+id/text_view_item_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textSize="@dimen/text_size_header"
+        android:textSize="@dimen/primary_text_size"
         android:layout_below="@id/text_view_item_name"
-        android:layout_marginTop="@dimen/from_header_margin"
-        android:text="N/A"/>
+        android:layout_marginLeft="@dimen/from_edge_margin"
+        android:text="N/A"
+        android:textColor="@color/colorPrimaryText"/>
 
     <TextView
         android:id="@+id/text_view_item_lower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size"
+        android:textSize="@dimen/secondary_text_size"
         android:layout_below="@id/text_view_item_value"
-        android:layout_marginLeft="@dimen/from_header_margin"
-        android:layout_alignParentLeft="true"
-        android:text="N/A"/>
+        android:layout_marginLeft="@dimen/from_edge_margin"
+        android:text="N/A"
+        android:textColor="@color/colorSecondaryText"/>
 
     <TextView
         android:id="@+id/text_view_item_high"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size"
+        android:layout_below="@id/text_view_item_value"
+        android:layout_toRightOf="@id/text_view_item_lower"
+        android:textSize="@dimen/secondary_text_size"
         android:text="N/A"
-        android:layout_marginRight="@dimen/from_header_margin"
-        android:layout_alignTop="@+id/text_view_item_lower"
-        android:layout_alignParentRight="true"/>
+        android:textColor="@color/colorSecondaryText"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/from_bottom_edge_margin"/>
 
 </RelativeLayout>

@@ -71,7 +71,9 @@ public class RelayAction extends DialogFragment {
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                System.out.println("Success");
+                //TODO: get new storage
+
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -81,7 +83,6 @@ public class RelayAction extends DialogFragment {
             }
         });
         queue.add(jsonRequest);
-
 
 
 
