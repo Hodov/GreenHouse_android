@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -145,10 +146,7 @@ public class SensorsActivity extends AppCompatActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
 
-            TextView textViewAirTemperature = (TextView) rootView.findViewById(R.id.section_label_temperature);
-            TextView textViewAirHumidity = (TextView) rootView.findViewById(R.id.section_label_humidity);
-            TextView textViewSoilHumidity = (TextView) rootView.findViewById(R.id.section_label_soil);
-            TextView textViewLight = (TextView) rootView.findViewById(R.id.section_label_light);
+
 
             //TODO: Insert data from storage
 
@@ -157,53 +155,18 @@ public class SensorsActivity extends AppCompatActivity {
             String soilHumidity = getSoilHumidity(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
             String light = getLight(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
 
-            textViewAirTemperature.setText(airTemperature);
-            textViewAirHumidity.setText(airHumidity);
-            textViewSoilHumidity.setText(soilHumidity);
-            textViewLight.setText(light);
-
-
-            TextView heaterRelay = (TextView) rootView.findViewById(R.id.heater_relay);
-            TextView coolerRelay = (TextView) rootView.findViewById(R.id.cooler_relay);
-            TextView humidifierRelay = (TextView) rootView.findViewById(R.id.humidifier_relay);
-            TextView illuminatorRelay = (TextView) rootView.findViewById(R.id.illuminator_relay);
-
-            heaterRelay.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, "heater");
-                    action.show(getFragmentManager(), "actions");
-                    return false;
-                }
-            });
-            coolerRelay.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, "cooler");
-                    action.show(getFragmentManager(), "actions");
-                    return false;
-                }
-            });
-            humidifierRelay.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, "humidifier");
-                    action.show(getFragmentManager(), "actions");
-                    return false;
-                }
-            });
-            illuminatorRelay.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, "illuminator");
-                    action.show(getFragmentManager(), "actions");
-                    return false;
-                }
-            });
-
             CustomListAdapter adapter = new CustomListAdapter(rootView.getContext(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
             GridView gridViewItems = (GridView) rootView.findViewById(R.id.grid_view);
             gridViewItems.setAdapter(adapter);
+
+            gridViewItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays.get(position).name);
+                    action.show(getFragmentManager(), "actions");
+                    return false;
+                }
+            });
 
             return rootView;
         }
@@ -272,7 +235,10 @@ public class SensorsActivity extends AppCompatActivity {
 
             while (iterInSensor.hasNext()) {
                 String relay = iterInSensor.next();
-                tempController.relays.add(GetSensorController(key, relay, storage));
+                Relay currRelay = GetSensorController(key, relay, storage);
+                if (currRelay != null) {
+                    tempController.relays.add(currRelay);
+                }
             }
             keys.add(tempController);
         }
@@ -286,26 +252,40 @@ public class SensorsActivity extends AppCompatActivity {
         int lowerBoundThreshold = 0;
         int upperBoundThreshold = 0;
         String value = "";
+
+        Boolean relayIs = false;
         try {
-            mode = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getString("mode");
-            if (storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).get("switcher") != null) {
-                switcher = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("switcher");
-            } else {
-                switcher = 0;
-            }
-            lowerBoundThreshold = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("lowerBoundThreshold");
-            upperBoundThreshold = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("upperBoundThreshold");
+            relayIs = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).has("lowerBoundThreshold");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        switch (relay) {
-            case "heater" :  value = getAirTemperature(controller); break;
-            case "cooler" :  value = getAirTemperature(controller); break;
-            case "humidifier" :  value = getAirHumidity(controller); break;
-            case "illuminator" :  value = getLight(controller); break;
+
+        if (relayIs) {
+            try {
+                mode = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getString("mode");
+                if (storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).get("switcher") != null) {
+                    switcher = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("switcher");
+                } else {
+                    switcher = 0;
+                }
+                lowerBoundThreshold = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("lowerBoundThreshold");
+                upperBoundThreshold = storage.getJSONObject(controller).getJSONObject("relays").getJSONObject(relay).getInt("upperBoundThreshold");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            switch (relay) {
+                case "heater" :  value = getAirTemperature(controller); break;
+                case "cooler" :  value = getAirTemperature(controller); break;
+                case "humidifier" :  value = getAirHumidity(controller); break;
+                case "illuminator" :  value = getLight(controller); break;
+            }
+            Relay tempRelay = new Relay(name, mode, switcher, value, lowerBoundThreshold, upperBoundThreshold);
+            return tempRelay;
         }
-        Relay tempRelay = new Relay(name, mode, switcher, value, lowerBoundThreshold, upperBoundThreshold);
-        return tempRelay;
+        else {
+            return null;
+        }
+
     }
 
     private static String getAirTemperature(String controller) {

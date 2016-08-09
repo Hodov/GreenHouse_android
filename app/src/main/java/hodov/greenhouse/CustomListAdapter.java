@@ -48,10 +48,19 @@ public class CustomListAdapter extends BaseAdapter {
                         inflate(R.layout.list_item, parent, false);
             }
 
+
+
             // get current item to be displayed
             Relay currentItem = (Relay) getItem(position);
 
+            if (currentItem.switcher == 0) {
+                convertView.setBackgroundColor(0xFFE57373);
+            } else {
+                convertView.setBackgroundColor(0xFF81C784);
+            }
             // get the TextView for item name and item description
+            TextView textViewItemName = (TextView)
+                    convertView.findViewById(R.id.text_view_item_name);
             TextView textViewItemValue = (TextView)
                     convertView.findViewById(R.id.text_view_item_value);
             TextView textViewItemLower = (TextView)
@@ -60,9 +69,10 @@ public class CustomListAdapter extends BaseAdapter {
                     convertView.findViewById(R.id.text_view_item_high);
 
             //sets the text for item name and item description from the current item object
+            textViewItemName.setText(currentItem.name);
             textViewItemValue.setText(currentItem.value);
-            textViewItemLower.setText(currentItem.lowerBoundThreshold);
-            textViewItemHigh.setText(currentItem.upperBoundThreshold);
+            textViewItemLower.setText(String.valueOf(currentItem.lowerBoundThreshold));
+            textViewItemHigh.setText(String.valueOf(currentItem.upperBoundThreshold));
             // returns the view for the current row
             return convertView;
         }

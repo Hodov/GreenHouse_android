@@ -3,12 +3,23 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/text_view_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/text_size_header"
+
+        android:text="N/A"/>
+
+    <TextView
         android:id="@+id/text_view_item_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textSize="@dimen/text_size_header"
-        android:text="22"/>
+        android:layout_below="@id/text_view_item_name"
+        android:layout_marginTop="@dimen/from_header_margin"
+        android:text="N/A"/>
 
     <TextView
         android:id="@+id/text_view_item_lower"
@@ -16,15 +27,17 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
         android:layout_below="@id/text_view_item_value"
+        android:layout_marginLeft="@dimen/from_header_margin"
         android:layout_alignParentLeft="true"
-        android:text="22"/>
+        android:text="N/A"/>
 
     <TextView
         android:id="@+id/text_view_item_high"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
-        android:text="22"
+        android:text="N/A"
+        android:layout_marginRight="@dimen/from_header_margin"
         android:layout_alignTop="@+id/text_view_item_lower"
         android:layout_alignParentRight="true"/>
 
