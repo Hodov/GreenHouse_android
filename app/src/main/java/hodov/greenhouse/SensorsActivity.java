@@ -278,6 +278,7 @@ public class SensorsActivity extends AppCompatActivity {
                 case "cooler" :  value = getAirTemperature(controller); break;
                 case "humidifier" :  value = getAirHumidity(controller); break;
                 case "illuminator" :  value = getLight(controller); break;
+                case "sprinkler" : value = getSoilHumidity(controller); break;
             }
             Relay tempRelay = new Relay(name, mode, switcher, value, lowerBoundThreshold, upperBoundThreshold);
             return tempRelay;
@@ -285,7 +286,6 @@ public class SensorsActivity extends AppCompatActivity {
         else {
             return null;
         }
-
     }
 
     private static String getAirTemperature(String controller) {
