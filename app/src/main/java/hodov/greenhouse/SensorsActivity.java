@@ -155,14 +155,29 @@ public class SensorsActivity extends AppCompatActivity {
             String soilHumidity = getSoilHumidity(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
             String light = getLight(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
 
-            CustomListAdapter adapter = new CustomListAdapter(rootView.getContext(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
+            final CustomListAdapter adapter = new CustomListAdapter(rootView.getContext(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
             GridView gridViewItems = (GridView) rootView.findViewById(R.id.grid_view);
             gridViewItems.setAdapter(adapter);
 
             gridViewItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    DialogFragment action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays.get(position).name);
+                    RelayAction action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays.get(position).name);
+                    action.setActionResponseListener(new RelayAction.ActionResponseListener() {
+                        @Override
+                        public void onDataLoaded(Object data) {
+                            VolleyRequest volreq = new VolleyRequest(getActivity());
+                            volreq.setResponseListener(new VolleyRequest.ResponseListener() {
+                                @Override
+                                public void onDataLoaded(JSONObject object) {
+                                    storage = object;
+                                    keys = createKeys(storage);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                            volreq.requestStorage();
+                        }
+                    });
                     action.show(getFragmentManager(), "actions");
                     return false;
                 }
@@ -200,25 +215,7 @@ public class SensorsActivity extends AppCompatActivity {
         }
     }
 
-    public void requestStorage() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String urlRaspberry = this.getResources().getString(R.string.url_raspberry);
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, urlRaspberry, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                storage = response;
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error);
-
-            }
-        });
-        queue.add(jsonRequest);
-    }
-
-    private ArrayList<SensorController> createKeys(JSONObject storage) {
+    private static ArrayList<SensorController> createKeys(JSONObject storage) {
         ArrayList<SensorController> keys = new ArrayList<SensorController>();
         Iterator<String> iter = storage.keys();
         while (iter.hasNext()) {
@@ -245,7 +242,7 @@ public class SensorsActivity extends AppCompatActivity {
         return keys;
     }
 
-    private Relay GetSensorController (String controller, String relay, JSONObject storage) {
+    private static Relay GetSensorController(String controller, String relay, JSONObject storage) {
         String name = relay;
         String mode = "";
         int switcher = 0;

@@ -66,6 +66,8 @@ public class CustomListAdapter extends BaseAdapter {
                     convertView.findViewById(R.id.text_view_item_lower);
             TextView textViewItemHigh = (TextView)
                     convertView.findViewById(R.id.text_view_item_high);
+            TextView textViewItemSwitcher = (TextView)
+                    convertView.findViewById(R.id.text_view_item_switcher);
 
             //sets the text for item name and item description from the current item object
             textViewItemName.setText(currentItem.name);
@@ -73,6 +75,13 @@ public class CustomListAdapter extends BaseAdapter {
             textViewItemLower.setText(String.valueOf(currentItem.lowerBoundThreshold));
             textViewItemHigh.setText(String.valueOf(currentItem.upperBoundThreshold));
 
+            String switcher = "off";
+            switch (currentItem.switcher) {
+                case 0: switcher = "off"; break;
+                case 1: switcher = "on"; break;
+            }
+
+            textViewItemHigh.setText(switcher);
 
 
             switch (currentItem.name) {

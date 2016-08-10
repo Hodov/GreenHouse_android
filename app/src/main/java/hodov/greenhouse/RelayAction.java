@@ -23,12 +23,22 @@ import java.util.Map;
  */
 public class RelayAction extends DialogFragment {
 
+    public interface ActionResponseListener {
+        public void onDataLoaded(Object data);
+    }
+
     String controller;
     String relay;
+    private ActionResponseListener listener;
 
     public RelayAction(String controller, String relay){
         this.controller = controller;
         this.relay = relay;
+        this.listener = null;
+    }
+
+    public void setActionResponseListener(ActionResponseListener listener) {
+        this.listener=listener;
     }
 
     @Override
@@ -71,7 +81,8 @@ public class RelayAction extends DialogFragment {
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //TODO: get new storage
+                if (listener != null)
+                    listener.onDataLoaded(response);
 
 
             }
@@ -83,8 +94,6 @@ public class RelayAction extends DialogFragment {
             }
         });
         queue.add(jsonRequest);
-
-
 
     }
 
