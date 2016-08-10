@@ -45,13 +45,26 @@
         android:layout_marginBottom="@dimen/from_bottom_edge_margin"/>
 
     <TextView
+        android:id="@+id/text_view_item_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/primary_text_size"
+        android:layout_below="@id/text_view_item_lower"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:text="N/A"
+        android:layout_marginLeft="@dimen/from_edge_margin"
+        android:textColor="@color/colorSecondaryText"/>
+
+    <TextView
         android:id="@+id/text_view_item_switcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/primary_text_size"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:text="N/A"
-        android:textColor="@color/colorSecondaryText"/>
+        android:textColor="@color/colorSecondaryText"
+        android:layout_marginRight="@dimen/from_edge_margin"/>
 
 </RelativeLayout>

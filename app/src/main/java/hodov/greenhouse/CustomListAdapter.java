@@ -18,7 +18,7 @@ public class CustomListAdapter extends BaseAdapter {
 
 
         private Context context; //context
-        private ArrayList <Relay> items; //data source of the list adapter
+        private ArrayList <Relay> items = new ArrayList<>(); //data source of the list adapter
 
         //public constructor
         public CustomListAdapter(Context context, ArrayList <Relay> items) {
@@ -52,11 +52,6 @@ public class CustomListAdapter extends BaseAdapter {
             // get current item to be displayed
             Relay currentItem = (Relay) getItem(position);
 
-//            if (currentItem.switcher == 0) {
-//                convertView.setBackgroundColor(0xFFE57373);
-//            } else {
-//                convertView.setBackgroundColor(0xFF81C784);
-//            }
             // get the TextView for item name and item description
             TextView textViewItemName = (TextView)
                     convertView.findViewById(R.id.text_view_item_name);
@@ -68,6 +63,8 @@ public class CustomListAdapter extends BaseAdapter {
                     convertView.findViewById(R.id.text_view_item_high);
             TextView textViewItemSwitcher = (TextView)
                     convertView.findViewById(R.id.text_view_item_switcher);
+            TextView textViewItemMode = (TextView)
+                    convertView.findViewById(R.id.text_view_item_mode);
 
             //sets the text for item name and item description from the current item object
             textViewItemName.setText(currentItem.name);
@@ -80,9 +77,13 @@ public class CustomListAdapter extends BaseAdapter {
                 case 0: switcher = "off"; break;
                 case 1: switcher = "on"; break;
             }
+            textViewItemSwitcher.setText(switcher);
 
-            textViewItemHigh.setText(switcher);
-
+            if (currentItem.mode.equals("auto") ) {
+                textViewItemMode.setText(currentItem.mode);
+            } else {
+                textViewItemMode.setText("");
+            }
 
             switch (currentItem.name) {
                 case "cooler" : convertView.setBackgroundColor(Color.parseColor("#4DD0E1")); break;

@@ -1,5 +1,6 @@
 package hodov.greenhouse;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -41,6 +42,8 @@ public class SensorsActivity extends AppCompatActivity {
 
     public static JSONObject storage;
     static ArrayList<SensorController> keys = new ArrayList<SensorController>();
+    static CustomListAdapter adapter;
+    static GridView gridViewItems;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -50,7 +53,7 @@ public class SensorsActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private static SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -64,7 +67,8 @@ public class SensorsActivity extends AppCompatActivity {
 
         try {
             storage = new JSONObject(getIntent().getStringExtra("storage"));
-            keys = createKeys(storage);
+            keys.clear();
+            keys.addAll(createKeys(storage));
         } catch (JSONException e) {
             System.out.println(e);
         }
@@ -145,40 +149,38 @@ public class SensorsActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
+            rootView.setTag("list");
+            adapter = new CustomListAdapter(rootView.getContext(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
 
-
-
-            //TODO: Insert data from storage
-
-            String airTemperature = getAirTemperature(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
-            String airHumidity = getAirHumidity(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
-            String soilHumidity = getSoilHumidity(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
-            String light = getLight(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name);
-
-            final CustomListAdapter adapter = new CustomListAdapter(rootView.getContext(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
-            GridView gridViewItems = (GridView) rootView.findViewById(R.id.grid_view);
+            gridViewItems = (GridView) rootView.findViewById(R.id.grid_view);
             gridViewItems.setAdapter(adapter);
 
             gridViewItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     RelayAction action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays.get(position).name);
+                    action.show(getFragmentManager(), "actions");
                     action.setActionResponseListener(new RelayAction.ActionResponseListener() {
                         @Override
                         public void onDataLoaded(Object data) {
-                            VolleyRequest volreq = new VolleyRequest(getActivity());
+                            final VolleyRequest volreq = new VolleyRequest(getActivity());
                             volreq.setResponseListener(new VolleyRequest.ResponseListener() {
                                 @Override
                                 public void onDataLoaded(JSONObject object) {
+                                    System.out.println(object);
                                     storage = object;
-                                    keys = createKeys(storage);
-                                    adapter.notifyDataSetChanged();
+                                    keys.clear();
+                                    keys.addAll(createKeys(storage));
+                                    //adapter.notifyDataSetChanged();
+                                    mSectionsPagerAdapter.notifyDataSetChanged();
+
+
                                 }
                             });
                             volreq.requestStorage();
                         }
                     });
-                    action.show(getFragmentManager(), "actions");
+
                     return false;
                 }
             });
@@ -195,6 +197,10 @@ public class SensorsActivity extends AppCompatActivity {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override
