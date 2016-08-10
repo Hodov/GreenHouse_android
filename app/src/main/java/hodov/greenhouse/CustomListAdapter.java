@@ -3,6 +3,7 @@ package hodov.greenhouse;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,11 +87,11 @@ public class CustomListAdapter extends BaseAdapter {
             }
 
             switch (currentItem.name) {
-                case "cooler" : convertView.setBackgroundColor(Color.parseColor("#4DD0E1")); break;
-                case "heater" : convertView.setBackgroundColor(Color.parseColor("#FFB74D")); break;
-                case "humidifier" : convertView.setBackgroundColor(Color.parseColor("#81C784")); break;
-                case "illuminator" : convertView.setBackgroundColor(Color.parseColor("#e57373")); break;
-                case "sprinkler" : convertView.setBackgroundColor(Color.parseColor("#90CAF9")); break;
+                case "cooler" : convertView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorCooler)); break;
+                case "heater" : convertView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorHeater)); break;
+                case "humidifier" : convertView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorHumidifier)); break;
+                case "illuminator" : convertView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorIlluminator)); break;
+                case "sprinkler" : convertView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSprinkler)); break;
             }
 
             // returns the view for the current row

@@ -2,14 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="hodov.greenhouse.SensorsActivity$PlaceholderFragment">
+    tools:context="hodov.greenhouse.SensorsActivity$PlaceholderFragment"
+    android:padding="3dp">
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="2"
-        android:verticalSpacing="1dp"
-        android:horizontalSpacing="1dp"
+        android:verticalSpacing="3dp"
+        android:horizontalSpacing="3dp"
         android:id="@+id/grid_view">
     </GridView>
 
