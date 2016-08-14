@@ -5,13 +5,21 @@
     tools:context="hodov.greenhouse.SensorsActivity$PlaceholderFragment"
     android:padding="3dp">
 
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="2"
-        android:verticalSpacing="3dp"
-        android:horizontalSpacing="3dp"
-        android:id="@+id/grid_view">
-    </GridView>
+        android:layout_height="match_parent">
 
+
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="2"
+            android:verticalSpacing="3dp"
+            android:horizontalSpacing="3dp"
+            android:id="@+id/grid_view">
+        </GridView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

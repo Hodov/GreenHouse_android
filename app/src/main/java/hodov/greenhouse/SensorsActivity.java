@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +45,8 @@ public class SensorsActivity extends AppCompatActivity {
     static ArrayList<SensorController> keys = new ArrayList<SensorController>();
     static CustomListAdapter adapter;
     static GridView gridViewItems;
+    private static SwipeRefreshLayout swipeContainer;
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -148,9 +151,22 @@ public class SensorsActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_sensors, container, false);
             rootView.setTag("list");
             adapter = new CustomListAdapter(rootView.getContext(), keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays);
+
+            swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
+
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    // Your code to refresh the list here.
+                    // Make sure you call swipeContainer.setRefreshing(false)
+                    // once the network request has completed successfully.
+                    refreshStorage(getView());
+                }
+            });
+
 
             gridViewItems = (GridView) rootView.findViewById(R.id.grid_view);
             gridViewItems.setAdapter(adapter);
@@ -178,6 +194,7 @@ public class SensorsActivity extends AppCompatActivity {
                                 }
                             });
                             volreq.requestStorage();
+                            //refreshStorage(rootView);
                         }
                     });
 
@@ -327,6 +344,24 @@ public class SensorsActivity extends AppCompatActivity {
         }
     }
 
+    private static void refreshStorage(View rootView) {
+        final VolleyRequest volreq = new VolleyRequest(rootView.getContext());
+        volreq.setResponseListener(new VolleyRequest.ResponseListener() {
+            @Override
+            public void onDataLoaded(JSONObject object) {
+                System.out.println(object);
+                storage = object;
+                keys.clear();
+                keys.addAll(createKeys(storage));
+                //adapter.notifyDataSetChanged();
+                mSectionsPagerAdapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
+
+
+            }
+        });
+        volreq.requestStorage();
+    }
 
 }
 
