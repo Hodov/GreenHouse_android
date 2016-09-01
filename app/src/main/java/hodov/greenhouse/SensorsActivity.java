@@ -243,8 +243,13 @@ public class SensorsActivity extends AppCompatActivity {
         Iterator<String> iter = storage.keys();
         while (iter.hasNext()) {
             String key = iter.next();
-
-            SensorController tempController = new SensorController(key);
+            String name = null;
+            try {
+                name = storage.getJSONObject(key).getString("name");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            SensorController tempController = new SensorController(name);
             Iterator<String> iterInSensor = null;
 
             try {

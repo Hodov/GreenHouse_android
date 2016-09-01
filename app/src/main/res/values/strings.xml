@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GreenHouse</string>
+    <string name="app_name">Garden Bot</string>
     <string name="url_raspberry">http://109.167.149.132:5000/storage</string>
     <string name="url_raspberry_android">http://109.167.149.132:5000/android</string>
 
