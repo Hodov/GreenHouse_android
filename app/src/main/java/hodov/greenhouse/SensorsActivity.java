@@ -174,7 +174,7 @@ public class SensorsActivity extends AppCompatActivity {
             gridViewItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    RelayAction action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).name, keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays.get(position).name);
+                    RelayAction action = new RelayAction(keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).id, keys.get(getArguments().getInt(ARG_SECTION_NUMBER)-1).relays.get(position).name);
                     action.show(getFragmentManager(), "actions");
                     action.setActionResponseListener(new RelayAction.ActionResponseListener() {
                         @Override
@@ -249,7 +249,7 @@ public class SensorsActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            SensorController tempController = new SensorController(name);
+            SensorController tempController = new SensorController(key, name);
             Iterator<String> iterInSensor = null;
 
             try {
